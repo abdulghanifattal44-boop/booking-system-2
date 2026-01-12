@@ -1,0 +1,3 @@
+-- Placeholder seed file.
+-- The original repository included a broken dump here.
+-- Keep this file valid so Postgres init does not fail.

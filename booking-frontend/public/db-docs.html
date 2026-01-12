@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полная документация БД Бронирования</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #475569;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --code-bg: #1e1e1e;
+            --sidebar-width: 280px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .sidebar h2 { font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 8px; }
+        .sidebar a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #eff6ff;
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        h1 { margin-bottom: 10px; font-size: 2.5rem; color: #0f172a; }
+        .subtitle { color: var(--secondary-color); margin-bottom: 40px; font-size: 1.1rem; }
+
+        section { margin-bottom: 60px; scroll-margin-top: 30px; }
+        h2 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; font-size: 1.8rem; color: #1e293b; }
+        h3 { margin: 25px 0 15px 0; color: var(--primary-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+
+        /* Cards */
+        .table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .intro-card {
+            border-left: 5px solid var(--primary-color);
+            background-color: #f0f9ff;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+        .badge-pk { background-color: #fee2e2; color: #991b1b; }
+        .badge-fk { background-color: #dbeafe; color: #1e40af; }
+        .badge-json { background-color: #fef3c7; color: #92400e; }
+        .badge-enum { background-color: #dcfce7; color: #166534; }
+
+        /* Tables */
+        table.schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table.schema-table th, table.schema-table td {
+            text-align: left;
+            padding: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        table.schema-table th { background-color: #f8fafc; color: var(--secondary-color); font-weight: 600; }
+        table.schema-table tr:hover { background-color: #fafafa; }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            direction: ltr;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .mobile-toggle { display: block; position: fixed; top: 15px; right: 15px; z-index: 1001; background: var(--primary-color); color: white; padding: 10px; border-radius: 50%; cursor: pointer; width: 45px; height: 45px; text-align: center; }
+        }
+        .mobile-toggle { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</div>
+
+    <aside class="sidebar">
+        <h2>Booking System</h2>
+        <ul>
+            <li><a href="#overview">Обзор системы</a></li>
+            <li><a href="#postgres">Что такое PostgreSQL?</a></li>
+            <li><a href="#orgs">Организации и Филиалы</a></li>
+            <li><a href="#resources">Ресурсы и Типы</a></li>
+            <li><a href="#scheduling">Управление временем</a></li>
+            <li><a href="#bookings">Бронирования и Пользователи</a></li>
+            <li><a href="#functions">Логика и Функции</a></li>
+            <li><a href="#enums">Типы Данных (Enums)</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div id="overview">
+            <h1>Документация Базы Данных</h1>
+            <p class="subtitle">Техническое руководство по архитектуре системы бронирования</p>
+            <p>Эта база данных разработана для обеспечения высокой надежности, автоматизации временных интервалов и поддержки мульти-арендности (Multi-tenancy).</p>
+        </div>
+
+        <section id="postgres">
+            <div class="table-card intro-card">
+                <h2>🐘 Что такое PostgreSQL?</h2>
+                <p style="line-height: 1.7; margin-bottom: 15px;">
+                    <strong>PostgreSQL</strong> — это самая продвинутая в мире объектно-реляционная система управления базами данных (СУБД) с открытым исходным кодом. 
+                    Она известна своей стабильностью, производительностью и способностью обрабатывать сложные типы данных, что делает её идеальным фундаментом для систем масштаба предприятия.
+                </p>
+                <h3 style="font-size: 1.1rem; color: #0369a1;">Ключевые преимущества для этого проекта:</h3>
+                <ul style="padding-left: 25px; line-height: 1.8;">
+                    <li><strong>Мощная работа с JSONB:</strong> Мы храним гибкие настройки и характеристики ресурсов в формате JSONB, сочетая мощь NoSQL с надежностью SQL.</li>
+                    <li><strong>Процедурный язык PL/pgSQL:</strong> Вся сложная математика времени и генерация слотов происходит на стороне сервера для максимальной скорости.</li>
+                    <li><strong>Целостность данных:</strong> Использование уникальных индексов и UUID гарантирует отсутствие дубликатов бронирований.</li>
+                    <li><strong>Расширяемость:</strong> Использование расширения <code>pgcrypto</code> для безопасной генерации ключей.</li>
+                </ul>
+            </div>
+            
+        </section>
+
+        <section id="orgs">
+            <h2>🏢 Организации и Филиалы</h2>
+            <div class="table-card">
+                <h3>organizations</h3>
+                <p>Основная таблица для компаний-клиентов.</p>
+                <table class="schema-table">
+                    <thead><tr><th>Колонка</th><th>Тип</th><th>Описание</th></tr></thead>
+                    <tbody>
+                        <tr><td>id <span class="badge badge-pk">PK</span></td><td>UUID</td><td>Уникальный ключ</td></tr>
+                        <tr><td>name</td><td>TEXT</td><td>Название компании</td></tr>
+                        <tr><td>settings <span class="badge badge-json">JSONB</span></td><td>JSONB</td><td>Глобальные настройки (валюта, язык)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-card">
+                <h3>branches</h3>
+                <p>Филиалы компаний, привязанные к часовым поясам.</p>
+                <table class="schema-table">
+                    <thead><tr><th>Колонка</th><th>Тип</th><th>Описание</th></tr></thead>
+                    <tbody>
+                        <tr><td>id <span class="badge badge-pk">PK</span></td><td>UUID</td><td>ID филиала</td></tr>
+                        <tr><td>timezone</td><td>TEXT</td><td>Например: 'Europe/Moscow'</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="resources">
+            <h2>📦 Ресурсы и Оборудование</h2>
+            <div class="table-card">
+                <h3>resources</h3>
+                <p>Объекты для бронирования (переговорные, столы, кабинеты).</p>
+                <table class="schema-table">
+                    <thead><tr><th>Колонка</th><th>Тип</th><th>Описание</th></tr></thead>
+                    <tbody>
+                        <tr><td>id <span class="badge badge-pk">PK</span></td><td>UUID</td><td>ID ресурса</td></tr>
+                        <tr><td>type_id <span class="badge badge-fk">FK</span></td><td>UUID</td><td>Тип (из resource_types)</td></tr>
+                        <tr><td>features <span class="badge badge-json">JSONB</span></td><td>JSONB</td><td>Оснащение (проектор, окна и т.д.)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="scheduling">
+            <h2>⏳ Управление Временем (Timeslots)</h2>
+            <p>Система генерирует слоты заранее на основе шаблонов работы.</p>
+            <div class="table-card">
+                <h3>timeslots</h3>
+                <table class="schema-table">
+                    <thead><tr><th>Колонка</th><th>Тип</th><th>Описание</th></tr></thead>
+                    <tbody>
+                        <tr><td>start_at</td><td>TIMESTAMPTZ</td><td>Начало интервала</td></tr>
+                        <tr><td>end_at</td><td>TIMESTAMPTZ</td><td>Конец интервала</td></tr>
+                        <tr><td>status <span class="badge badge-enum">ENUM</span></td><td>timeslot_status</td><td>open, blocked, maintenance</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </section>
+
+        <section id="bookings">
+            <h2>📅 Бронирования и Клиенты</h2>
+            <div class="table-card">
+                <h3>bookings</h3>
+                <p>Таблица транзакций бронирования.</p>
+                <table class="schema-table">
+                    <thead><tr><th>Колонка</th><th>Тип</th><th>Описание</th></tr></thead>
+                    <tbody>
+                        <tr><td>user_id <span class="badge badge-fk">FK</span></td><td>UUID</td><td>Кто забронировал</td></tr>
+                        <tr><td>timeslot_id <span class="badge badge-fk">FK</span></td><td>UUID</td><td>Какой слот выбран</td></tr>
+                        <tr><td>status <span class="badge badge-enum">ENUM</span></td><td>booking_status</td><td>Статус записи</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="functions">
+            <h2>⚙️ Бизнес-логика (Функции)</h2>
+            <div class="table-card">
+                <h3>generate_timeslots_for_resource</h3>
+                <p>Основная функция PL/pgSQL, которая:</p>
+                <ul>
+                    <li>Учитывает часы работы из <code>schedule_templates</code>.</li>
+                    <li>Автоматически пропускает праздники (Holidays).</li>
+                    <li>Рассчитывает длительность на основе типа ресурса.</li>
+                </ul>
+                <pre>
+-- Пример вызова функции:
+SELECT booking.generate_timeslots_for_resource(
+    'resource-uuid-here', 
+    '2023-10-01', 
+    '2023-10-07'
+);
+                </pre>
+            </div>
+        </section>
+
+        <section id="enums">
+            <h2>🔠 Типы Данных (Enums)</h2>
+            <div class="table-card">
+                <ul>
+                    <li><strong>booking_status:</strong> pending, confirmed, cancelled, no_show</li>
+                    <li><strong>timeslot_status:</strong> open, blocked, maintenance</li>
+                    <li><strong>user_status:</strong> active, inactive, suspended</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Подсветка активного пункта меню при прокрутке
+        const sections = document.querySelectorAll('section, div[id="overview"]');
+        const navLi = document.querySelectorAll('.sidebar ul li a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: booking-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: booking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # سكيمة المشروع الأساسية
+      - ./booking-backend/sql/schema_booking.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      # سكربتات تهيئة إضافية إن وجدت
+      - ./booking-backend/docker/postgres/init:/docker-entrypoint-initdb.d/02-init:ro
+      # لو حابب تحمل الداتا من db_dump.sql
+      - ./db_dump.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
+    networks:
+      - booking-net
+
+  backend:
+    build:
+      context: ./booking-backend
+    container_name: booking-backend
+    restart: unless-stopped
+    env_file:
+      - ./booking-backend/.env.docker
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+    networks:
+      - booking-net
+
+  frontend:
+    build:
+      context: ./booking-frontend
+    container_name: booking-frontend
+    restart: unless-stopped
+    environment:
+      # هنضبطها في الكود كـ fallback
+      - VITE_API_BASE_URL=http://localhost:4000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - booking-net
+
+networks:
+  booking-net:
+
+volumes:
+  db-data:

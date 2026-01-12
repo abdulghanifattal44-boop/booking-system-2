@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документация Frontend (FE)</title>
+    <style>
+        :root {
+            --primary-color: #6366f1; /* Indigo for Frontend */
+            --secondary-color: #475569;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --code-bg: #1e1e1e;
+            --sidebar-width: 280px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .sidebar h2 { font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 8px; }
+        .sidebar a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #eef2ff;
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        h1 { margin-bottom: 10px; font-size: 2.5rem; color: #0f172a; }
+        .subtitle { color: var(--secondary-color); margin-bottom: 40px; font-size: 1.1rem; }
+
+        section { margin-bottom: 60px; scroll-margin-top: 30px; }
+        h2 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; font-size: 1.8rem; color: #1e293b; }
+        h3 { margin: 25px 0 15px 0; color: var(--primary-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+
+        /* Cards */
+        .table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .intro-card {
+            border-left: 5px solid var(--primary-color);
+            background-color: #eef2ff;
+        }
+
+        /* Badges */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; text-transform: uppercase; }
+        .badge-react { background-color: #e0f2fe; color: #0369a1; }
+        .badge-ui { background-color: #fce7f3; color: #be185d; }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            direction: ltr;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .mobile-toggle { display: block; position: fixed; top: 15px; right: 15px; z-index: 1001; background: var(--primary-color); color: white; padding: 10px; border-radius: 50%; cursor: pointer; width: 45px; height: 45px; text-align: center; }
+        }
+        .mobile-toggle { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</div>
+
+    <aside class="sidebar">
+        <h2>Frontend Docs</h2>
+        <ul>
+            <li><a href="#overview">Обзор (Overview)</a></li>
+            <li><a href="#stack">Стек (React+Vite)</a></li>
+            <li><a href="#components">Компоненты</a></li>
+            <li><a href="#styling">Стилизация (Tailwind)</a></li>
+            <li><a href="#ux">UX и Анимации</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div id="overview">
+            <h1>Frontend Документация</h1>
+            <p class="subtitle">Пользовательский интерфейс и клиентская логика.</p>
+        </div>
+
+        <section id="stack">
+            <div class="table-card intro-card">
+                <h2>⚛️ Стек Технологий</h2>
+                <p>Современный, быстрый и отзывчивый интерфейс.</p>
+                <ul style="margin-top: 15px;">
+                    <li><strong>React 18:</strong> Библиотека для построения интерфейсов.</li>
+                    <li><strong>Vite:</strong> Сборщик нового поколения (Build Tool) для мгновенного запуска.</li>
+                    <li><strong>SPA (Single Page Application):</strong> Плавная навигация без перезагрузки страниц.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="components">
+            <h2>🧩 Композиция Компонентов</h2>
+            <div class="table-card">
+                <h3>Переиспользование (Reusability)</h3>
+                <p>Интерфейс разбит на независимые "кирпичики" (Button, Card, Modal), которые используются повторно. Это упрощает поддержку и обеспечивает единообразие дизайна.</p>
+            </div>
+            <div class="table-card">
+                <h3>Pages (Страницы)</h3>
+                <ul>
+                    <li><strong>Home.jsx:</strong> Лендинг с навигацией.</li>
+                    <li><strong>Admin.jsx:</strong> Панель управления (Дашборд).</li>
+                    <li><strong>Customer.jsx:</strong> Визард бронирования для клиентов.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="styling">
+            <h2>🎨 Стилизация с Tailwind CSS</h2>
+            <div class="table-card">
+                <p>Мы используем <strong>Utility-First</strong> подход. Стили пишутся прямо в классах (className).</p>
+                <pre>
+<button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl">
+  Забронировать
+</button>
+                </pre>
+                <p style="margin-top: 10px;"><strong>Преимущества:</strong> Адаптивность (Responsive) "из коробки" и отсутствие конфликтов имен CSS.</p>
+            </div>
+        </section>
+
+        <section id="ux">
+            <h2>✨ UX и Анимации</h2>
+            <div class="table-card">
+                <ul>
+                    <li><strong>Lucide Icons:</strong> Единая библиотека иконок для визуальной чистоты.</li>
+                    <li><strong>Transitions:</strong> Плавные эффекты при наведении (Hover).</li>
+                    <li><strong>States:</strong> Визуальное отображение загрузки (Loading...) и ошибок.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll('section, div[id="overview"]');
+        const navLi = document.querySelectorAll('.sidebar ul li a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) { current = section.getAttribute('id'); }
+            });
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) { a.classList.add('active'); }
+            });
+        });
+    </script>
+</body>
+</html>

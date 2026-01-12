@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: booking-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: booking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./booking-backend/sql/schema_booking.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./booking-backend/docker/postgres/init:/docker-entrypoint-initdb.d/02-init:ro
+      - ./db_dump.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
+    networks:
+      - booking-net
+
+  backend:
+    build:
+      context: ./booking-backend
+    container_name: booking-backend
+    restart: unless-stopped
+    env_file:
+      - ./booking-backend/.env.docker
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+    networks:
+      - booking-net
+
+  frontend:
+    build:
+      context: ./booking-frontend
+      args:
+        VITE_API_BASE_URL: /api
+        VITE_APP_TARGET: customer
+    container_name: booking-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+    networks:
+      - booking-net
+
+  admin_frontend:
+    build:
+      context: ./booking-frontend
+      args:
+        VITE_API_BASE_URL: /api
+        VITE_APP_TARGET: admin
+    container_name: booking-admin-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8082:80"
+    networks:
+      - booking-net
+
+networks:
+  booking-net:
+
+
+volumes:
+  db-data:

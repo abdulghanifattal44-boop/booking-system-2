@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документация DevOps</title>
+    <style>
+        :root {
+            --primary-color: #ea580c; /* Orange for DevOps */
+            --secondary-color: #475569;
+            --bg-color: #fff7ed;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #fed7aa;
+            --code-bg: #1e1e1e;
+            --sidebar-width: 280px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .sidebar h2 { font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 8px; }
+        .sidebar a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #ffedd5;
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        h1 { margin-bottom: 10px; font-size: 2.5rem; color: #0f172a; }
+        .subtitle { color: var(--secondary-color); margin-bottom: 40px; font-size: 1.1rem; }
+
+        section { margin-bottom: 60px; scroll-margin-top: 30px; }
+        h2 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; font-size: 1.8rem; color: #1e293b; }
+        h3 { margin: 25px 0 15px 0; color: var(--primary-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+
+        /* Cards */
+        .table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .intro-card {
+            border-left: 5px solid var(--primary-color);
+            background-color: #fff7ed;
+        }
+
+        /* Badges */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; text-transform: uppercase; }
+        .badge-docker { background-color: #e0f2fe; color: #0369a1; }
+        .badge-env { background-color: #dcfce7; color: #166534; }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            direction: ltr;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .mobile-toggle { display: block; position: fixed; top: 15px; right: 15px; z-index: 1001; background: var(--primary-color); color: white; padding: 10px; border-radius: 50%; cursor: pointer; width: 45px; height: 45px; text-align: center; }
+        }
+        .mobile-toggle { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</div>
+
+    <aside class="sidebar">
+        <h2>DevOps & Infra</h2>
+        <ul>
+            <li><a href="#overview">Обзор (Overview)</a></li>
+            <li><a href="#env">Конфигурация (Env)</a></li>
+            <li><a href="#docker">Docker & Containers</a></li>
+            <li><a href="#proxy">Nginx Proxy</a></li>
+            <li><a href="#deploy">Развертывание (Deploy)</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div id="overview">
+            <h1>DevOps Документация</h1>
+            <p class="subtitle">Инфраструктура, развертывание и конфигурация серверов.</p>
+        </div>
+
+        <section id="env">
+            <div class="table-card intro-card">
+                <h2>🔐 Конфигурация (.env)</h2>
+                <p>Безопасность превыше всего. Все секретные ключи хранятся вне кода.</p>
+                <div style="margin-top: 15px; background: #fefce8; padding: 15px; border-radius: 8px; border: 1px solid #fde047;">
+                    <strong>Пример переменных окружения:</strong>
+                    <ul style="list-style: none; margin-top: 5px; font-family: monospace;">
+                        <li>DATABASE_URL=postgres://user:pass@localhost:5432/db</li>
+                        <li>JWT_SECRET=super_secret_key_123</li>
+                        <li>PORT=3000</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="docker">
+            <h2>🐳 Docker Containerization</h2>
+            <div class="table-card">
+                <h3>Изоляция</h3>
+                <p>Приложение работает в контейнерах. Это гарантирует, что оно будет работать одинаково на любом компьютере разработчика и на боевом сервере («Works on my machine» - в прошлом).</p>
+            </div>
+        </section>
+
+        <section id="proxy">
+            <h2>🔀 Nginx Reverse Proxy</h2>
+            <div class="table-card">
+                <p>Nginx выступает входными воротами (Gateway) для приложения.</p>
+                <ul>
+                    <li><strong>Static Files:</strong> Раздает Frontend (HTML/CSS/JS) молниеносно.</li>
+                    <li><strong>API Proxy:</strong> Перенаправляет запросы <code>/api/*</code> на Backend сервер.</li>
+                    <li><strong>Security:</strong> Скрывает внутреннюю структуру сети от внешнего мира.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="deploy">
+            <h2>🚀 Развертывание (Deployment Strategy)</h2>
+            <div class="table-card">
+                <p>Архитектура готова к масштабированию:</p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Frontend и Backend разделены.</li>
+                    <li>Могут быть развернуты на разных серверах.</li>
+                    <li>Поддержка CI/CD пайплайнов для автоматической сборки.</li>
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll('section, div[id="overview"]');
+        const navLi = document.querySelectorAll('.sidebar ul li a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) { current = section.getAttribute('id'); }
+            });
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) { a.classList.add('active'); }
+            });
+        });
+    </script>
+</body>
+</html>
