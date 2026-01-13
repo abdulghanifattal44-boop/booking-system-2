@@ -1,0 +1,13 @@
+digraph Roadmap {
+  rankdir=LR;
+  graph [fontname="Inter", fontsize=10, labelloc=t, label="Product Roadmap (suggested)"];
+  node  [fontname="Inter", fontsize=9, shape=box, style="rounded,filled", fillcolor="#f6f6f6"];
+  edge  [fontname="Inter", fontsize=8, arrowsize=0.8];
+
+  now [label="Now (MVP)\n- Public browse\n- Timeslots generation\n- Customer booking (auth required)\n- Admin CRUD + generate\n- Split customer/admin frontends"];
+  p1 [label="Phase 1 (Hardening)\n- Protect booking GET/PUT/CANCEL\n- Rate limit auth\n- Password reset by email\n- Audit logs\n- Validation + better errors"];
+  p2 [label="Phase 2 (Booking UX)\n- Capacity rules\n- Waitlist\n- No-show handling\n- Notifications (email/SMS)\n- Calendar integration"];
+  p3 [label="Phase 3 (Ops/Enterprise)\n- Multi-org admins\n- SSO (OIDC)\n- Payments\n- Observability (metrics/tracing)\n- Backup/restore + migrations"];
+
+  now -> p1 -> p2 -> p3;
+}

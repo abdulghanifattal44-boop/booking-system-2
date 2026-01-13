@@ -1,0 +1,22 @@
+digraph DevOps {
+  rankdir=LR;
+  graph [fontname="Inter", fontsize=10, labelloc=t, label="DevOps / Deployment Architecture (docker-compose)"];
+  node  [fontname="Inter", fontsize=9, shape=box, style="rounded"];
+  edge  [fontname="Inter", fontsize=8, arrowsize=0.8];
+
+  browser [label="Browser\n(Customer / Admin)"];
+
+  customer_fe [label="customer frontend\nNginx serves Vite build\nport: 8081:80\nVITE_APP_TARGET=customer"];
+  admin_fe [label="admin frontend\nNginx serves Vite build\nport: 8082:80\nVITE_APP_TARGET=admin"];
+
+  backend [label="backend (Node/Express)\nport: 4000\nJWT + RBAC\n/api/*"];
+  db [label="PostgreSQL 16\nport: 5432\nvolume: db-data\nschema: booking"];
+
+  browser -> customer_fe [label="HTTP"];
+  browser -> admin_fe [label="HTTP"];
+
+  customer_fe -> backend [label="/api → backend"];
+  admin_fe -> backend [label="/api → backend"];
+
+  backend -> db [label="SQL (pg)" ];
+}

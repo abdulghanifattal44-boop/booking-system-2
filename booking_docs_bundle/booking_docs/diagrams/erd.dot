@@ -1,0 +1,29 @@
+digraph ERD {
+  rankdir=LR;
+  graph [fontname="Inter", fontsize=10, labelloc=t, label="Booking System – ERD (schema: booking)"];
+  node  [shape=record, fontname="Inter", fontsize=9];
+  edge  [fontname="Inter", fontsize=8, color="#555555", arrowsize=0.8];
+
+  organizations [label="{organizations|id (PK)\\lname}"];
+  branches       [label="{branches|id (PK)\\lorg_id (FK)\\lname}"];
+  resource_types [label="{resource_types|id (PK)\\lname (UNIQUE)\\lslot_duration_min}"];
+  resources      [label="{resources|id (PK)\\lbranch_id (FK)\\ltype_id (FK)\\lname\\lcapacity}"];
+  schedule_templates [label="{schedule_templates|id (PK)\\lresource_id (FK)\\lday_of_week\\lstart_time\\lend_time}"];
+  timeslots      [label="{timeslots|id (PK)\\lresource_id (FK)\\lstart_at\\lend_at\\lstatus\\lavail_capacity\\lUQ(resource_id,start_at,end_at)}"];
+  roles          [label="{roles|id (PK)\\lname (UNIQUE)}"];
+  users          [label="{users|id (PK)\\lemail (UNIQUE)\\lrole_id (FK)\\lorg_id (FK)\\lpassword_hash}"];
+  booking_policies [label="{booking_policies|id (PK)\\lname}"];
+  bookings       [label="{bookings|id (PK)\\luser_id (FK)\\lresource_id (FK)\\ltimeslot_id (FK)\\lpolicy_id (FK)\\lstatus}"];
+
+  branches -> organizations [label="org_id → id", color="#1f77b4"];
+  users -> roles          [label="role_id → id", color="#1f77b4"];
+  users -> organizations  [label="org_id → id", color="#1f77b4"];
+  resources -> branches   [label="branch_id → id", color="#1f77b4"];
+  resources -> resource_types [label="type_id → id", color="#1f77b4"];
+  schedule_templates -> resources [label="resource_id → id", color="#1f77b4"];
+  timeslots -> resources  [label="resource_id → id", color="#1f77b4"];
+  bookings -> users       [label="user_id → id", color="#1f77b4"];
+  bookings -> resources   [label="resource_id → id", color="#1f77b4"];
+  bookings -> timeslots   [label="timeslot_id → id", color="#1f77b4"];
+  bookings -> booking_policies [label="policy_id → id", color="#1f77b4"];
+}

@@ -1,0 +1,44 @@
+digraph UseCases {
+  rankdir=LR;
+  graph [fontname="Inter", fontsize=10, labelloc=t, label="Booking System – Use Cases"];
+  node  [fontname="Inter", fontsize=9];
+  edge  [fontname="Inter", fontsize=8, arrowsize=0.8];
+
+  guest [shape=box, label="Guest (Visitor)"];
+  customer [shape=box, label="Customer (Logged-in)"];
+  admin [shape=box, label="Admin (Logged-in)"];
+
+  uc_browse [shape=ellipse, label="Browse organizations/branches/resources\n(via /api/public)"];
+  uc_view_slots [shape=ellipse, label="View available timeslots\n(GET /api/resources/:id/timeslots)"];
+  uc_register [shape=ellipse, label="Register\n(POST /api/auth/register)"];
+  uc_login [shape=ellipse, label="Login\n(POST /api/auth/login)"];
+  uc_book [shape=ellipse, label="Create booking (auth required)\n(POST /api/bookings)"];
+  uc_my_bookings [shape=ellipse, label="Search bookings by email\n(GET /api/bookings/by-email)"];
+  uc_admin_login [shape=ellipse, label="Admin login page\n(/admin/login)"];
+  uc_manage_org [shape=ellipse, label="Manage organizations\n(/api/admin/organizations)"];
+  uc_manage_branch [shape=ellipse, label="Manage branches\n(/api/admin/organizations/:orgId/branches)"];
+  uc_manage_res [shape=ellipse, label="Manage resources\n(/api/admin/branches/:branchId/resources)"];
+  uc_templates [shape=ellipse, label="Manage schedule templates\n(/api/admin/resources/:resId/schedule-templates)"];
+  uc_gen_slots [shape=ellipse, label="Generate timeslots\n(/api/admin/resources/:resId/timeslots/generate)"];
+  uc_manage_bookings [shape=ellipse, label="Manage bookings/status\n(/api/admin/bookings)"];
+  uc_manage_users [shape=ellipse, label="Manage users\n(/api/admin/users)"];
+
+  guest -> uc_browse;
+  guest -> uc_view_slots;
+  guest -> uc_register [style=dashed, label="when booking"];
+  guest -> uc_login [style=dashed, label="when booking"];
+
+  customer -> uc_browse;
+  customer -> uc_view_slots;
+  customer -> uc_book;
+  customer -> uc_my_bookings;
+
+  admin -> uc_admin_login;
+  admin -> uc_manage_org;
+  admin -> uc_manage_branch;
+  admin -> uc_manage_res;
+  admin -> uc_templates;
+  admin -> uc_gen_slots;
+  admin -> uc_manage_bookings;
+  admin -> uc_manage_users;
+}

@@ -1,0 +1,43 @@
+digraph Access {
+  rankdir=LR;
+  graph [fontname="Inter", fontsize=10, labelloc=t, label="Role/Access Map"];
+  node [fontname="Inter", fontsize=9];
+  edge [fontname="Inter", fontsize=8, arrowsize=0.8];
+
+  subgraph cluster_roles {
+    label="Actors";
+    style=rounded;
+    guest [shape=box, label="Guest"];
+    customer [shape=box, label="Customer (auth)"];
+    admin [shape=box, label="Admin (auth)"];
+  }
+  subgraph cluster_ui {
+    label="Frontends";
+    style=rounded;
+    customer_ui [shape=component, label="Customer UI\n8081\n(VITE_APP_TARGET=customer)"];
+    admin_ui [shape=component, label="Admin UI\n8082\n(VITE_APP_TARGET=admin)"];
+  }
+  subgraph cluster_api {
+    label="Backend APIs";
+    style=rounded;
+    public_api [shape=folder, label="Public API\n/api/public/*"];
+    auth_api [shape=folder, label="Auth API\n/api/auth/*"];
+    booking_api [shape=folder, label="Booking API\n/api/*"];
+    admin_api [shape=folder, label="Admin API (protected)\n/api/admin/*"];
+  }
+
+  guest -> customer_ui [label="browse"];
+  customer -> customer_ui [label="book"];
+  admin -> admin_ui [label="manage"];
+
+  customer_ui -> public_api [label="GET"];
+  customer_ui -> booking_api [label="GET timeslots"];
+  customer_ui -> auth_api [label="register/login" style=dashed];
+  customer_ui -> booking_api [label="POST /bookings" style=dashed];
+
+  admin_ui -> auth_api [label="login" ];
+  admin_ui -> admin_api [label="CRUD + generate" ];
+
+  customer -> auth_api [label="Bearer token" style=dotted];
+  admin -> admin_api [label="Bearer token + role=admin" style=dotted];
+}
